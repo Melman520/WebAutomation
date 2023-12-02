@@ -1,0 +1,50 @@
+defaultTasks 'clean', 'test', 'aggregate'
+
+apply plugin:'java'
+apply plugin: 'idea'
+apply plugin: 'net.serenity-bdd.serenity-gradle-plugin'
+
+group 'com.sharepoint.epmco'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "net.serenity-bdd:serenity-gradle-plugin:3.5.0"
+    }
+}
+
+tasks.withType(JavaCompile).configureEach{
+    options.encoding = 'UTF-8'
+}
+
+dependencies {
+    implementation group: 'net.serenity-bdd', name: 'serenity-core', version: '3.6.12'
+    testImplementation group: 'net.serenity-bdd', name: 'serenity-cucumber', version: '3.6.22'
+    implementation group: 'net.serenity-bdd', name: 'serenity-junit', version: '3.6.22'
+    implementation group: 'net.serenity-bdd', name: 'serenity-screenplay', version: '3.6.22'
+    implementation group: 'net.serenity-bdd', name: 'serenity-screenplay-webdriver', version: '3.6.22'
+    implementation group: 'net.serenity-bdd', name: 'serenity-ensure', version: '3.6.22'
+    testImplementation  group: 'org.slf4j', name: 'slf4j-api', version: '2.0.5'
+    testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.5'
+    testImplementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.9.1'
+}
+
+test {
+    systemProperties.getProperties()
+    systemProperty 'file.encoding','UTF-8'
+    testLogging.showStandardStreams = true
+    finalizedBy(aggregate)
+}
